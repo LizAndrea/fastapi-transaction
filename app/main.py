@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.responses import HTMLResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from app.customers import routes as Customers
@@ -29,9 +30,9 @@ app = FastAPI(
     version=version,
     license_info={"name": "MIT License", "url": "https://opensource.org/license/mit"},
     contact={
-        "name": "Liz Andrea Ramos H.",
-        "url": "https://github.com/LizAndrea",
-        "email": "andrea.ramos.seth@gmail.com",
+        "name": "Henry Alejandro Taby Zenteno",
+        "url": "https://github.com/henrytaby",
+        "email": "henry.taby@gmail.com",
     },
     # openapi_url=f"{version_prefix}/openapi.json",
     # docs_url=f"{version_prefix}/docs",
@@ -78,15 +79,31 @@ security = HTTPBasic()
 
 
 @app.get("/")
-async def root(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
-    return {"message": f"Hola, Mundo con FastAPI y python!"}
+async def root():
+    return {"message": f"Hola, Mundo FastAPI con python!"}
     
 
-"""@app.get("/")
-async def root(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
-    print(credentials)
-    if credentials.username == "admin" and credentials.password == "123":
-        return {"message": f"Hola, Mundo {credentials.username}!"}
-    else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+"""
+country_timezones = {
+    "CO" : "America/Bogota",
+    "MX" : "America/Mexico_City",
+    "AR" : "America/Argentina/Buenos_Aires",
+    "BR" : "America/Sao_Paulo",
+    "PE" : "America/Lima",
+}
+
+@app.get('/time/{iso_code}')
+async def get_time_by_iso(iso_code: str):
+    iso = iso_code.upper()
+    timezone_str = country_timezones.get(iso)
+    tz = zoneinfo.ZoneInfo(timezone_str)
+    now = datetime.now(tz)
+    #return {"datetime": now.strftime('%Y-%m-%d %H:%M:%S')}
+    return {"datetime": now}
+
+
+
+@app.post('/invoices')
+async def create_invoice(invoice_data: Invoice):
+    return invoice_data
 """
