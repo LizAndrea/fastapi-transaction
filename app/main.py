@@ -29,10 +29,10 @@ app = FastAPI(
     description=description,
     version=version,
     license_info={"name": "MIT License", "url": "https://opensource.org/license/mit"},
-    contact={
-        "name": "Henry Alejandro Taby Zenteno",
-        "url": "https://github.com/henrytaby",
-        "email": "henry.taby@gmail.com",
+     contact={
+        "name": "Liz Andrea Ramos H.",
+        "url": "https://github.com/LizAndrea",
+        "email": "andrea.ramos.seth@gmail.com",
     },
     # openapi_url=f"{version_prefix}/openapi.json",
     # docs_url=f"{version_prefix}/docs",
