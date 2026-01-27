@@ -1,7 +1,8 @@
 from fastapi import APIRouter, status
 
 from app.db import SessionDep
-from app.models import Plan, PlanCreate, PlanUpdate
+from app.plans.models import Plan
+from app.plans.schemas import PlanCreate, PlanUpdate
 from app.plans.service import PlanService
 
 router = APIRouter()

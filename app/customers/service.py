@@ -2,16 +2,11 @@ from fastapi import HTTPException, Query, status
 from sqlmodel import select
 
 from app.db import SessionDep
-from app.models import (
-    Customer,
-    CustomerCreate,
-    CustomerPlan,
-    CustomerUpdate,
-    Plan,
-    StatusEnum,
-    Transaction,
-    TransactionCreate,
-)
+from app.customers.models import Customer
+from app.customers.schemas import CustomerCreate, CustomerUpdate
+from app.plans.models import Plan, CustomerPlan, StatusEnum
+from app.transactions.models import Transaction
+from app.transactions.schemas import TransactionCreate
 
 
 class CustomerService:

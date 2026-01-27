@@ -2,14 +2,11 @@ from fastapi import APIRouter, Query, status
 
 from app.customers.service import CustomerService
 from app.db import SessionDep
-from app.models import (
-    Customer,
-    CustomerCreate,
-    CustomerUpdate,
-    StatusEnum,
-    Transaction,
-    TransactionCreate,
-)
+from app.customers.models import Customer
+from app.customers.schemas import CustomerCreate, CustomerUpdate
+from app.plans.models import StatusEnum
+from app.transactions.models import Transaction
+from app.transactions.schemas import TransactionCreate
 
 router = APIRouter()
 service = CustomerService()
