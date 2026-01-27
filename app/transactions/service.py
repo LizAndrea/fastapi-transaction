@@ -1,7 +1,7 @@
 from sqlmodel import select
 
 from app.db import SessionDep
-from app.models import Transaction
+from app.transactions.models import Transaction
 
 
 class TransactionService:

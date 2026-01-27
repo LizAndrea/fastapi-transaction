@@ -7,7 +7,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 from app.auth.models import User
-from app.models import Customer, Transaction, Plan
+from app.customers.models import Customer
+from app.transactions.models import Transaction
+from app.plans.models import Plan
 from sqlmodel import SQLModel
 
 from app.config import Config

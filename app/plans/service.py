@@ -2,7 +2,8 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from app.db import SessionDep
-from app.models import Plan, PlanCreate, PlanUpdate
+from app.plans.models import Plan
+from app.plans.schemas import PlanCreate, PlanUpdate
 
 
 class PlanService:
