@@ -1,37 +1,26 @@
-from fastapi import HTTPException, status
-from sqlmodel import select
-
-from app.db import SessionDep
+from app.common.exceptions import NotFoundException
 from app.plans.models import Plan
-from app.plans.schemas import PlanCreate, PlanUpdate
-
+from app.plans.schemas import PlanCreate
+from app.plans.repository import PlanRepository
 
 class PlanService:
+    def __init__(self, plan_repository: PlanRepository):
+        self.plan_repository = plan_repository
 
-     
     # GET ALL PLANS
-    # ----------------------
-    def get_all_plans(self, session: SessionDep):
-        return session.exec(select(Plan)).all()
+    def get_all_plans(self):
+        return self.plan_repository.get_all()
     
     # CREATE
-    # ----------------------
-    def create_plan(self, plan_data: PlanCreate, session: SessionDep):
+    def create_plan(self, plan_data: PlanCreate):
         plan_db = Plan.model_validate(plan_data.model_dump())
-        session.add(plan_db)
-        session.commit()
-        session.refresh(plan_db)
-        return plan_db
+        return self.plan_repository.create(plan_db)
 
     # GET ONE
-    # ----------------------
-    
+    # ... (impl pending if needed)
 
     # UPDATE
-    # ----------------------
-
-
+    # ...
 
     # DELETE
-    # ----------------------
-    
+    # ...
