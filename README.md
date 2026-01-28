@@ -18,75 +18,133 @@ El proyecto utiliza las siguientes tecnologías y librerías clave:
 
 ## Requisitos Previos
 
-Antes de comenzar, asegúrate de tener instalado:
+Antes de comenzar, asegúrate de tener las siguientes herramientas instaladas. Si es tu primera vez configurando un entorno de desarrollo, sigue la sección de **Preparación del Entorno (Desde Cero)** más abajo.
 
--   Python 3.10 o superior
--   PostgreSQL instalado y ejecutándose
--   Git
+-   **Python 3.10+** (incluye pip y venv)
+-   **PostgreSQL 13+**
+-   **Git**
 
-## Instalación y Configuración
+### Verificación
 
-Sigue los pasos correspondientes a tu sistema operativo.
+Para confirmar que tienes las herramientas instaladas y comprobar sus versiones, ejecuta los siguientes comandos en tu terminal:
 
-### Linux / WSL
+```bash
+# Verificar versión de Python (Debe ser 3.10 o superior)
+python3 --version
+# Nota: En Windows puede ser 'python --version'
 
-1.  **Clonar el repositorio**
+# Verificar versión de Git
+git --version
+
+# Verificar versión de PostgreSQL (si tienes el cliente instalado)
+psql --version
+```
+
+## Preparación del Entorno (Desde Cero)
+
+Si no tienes instaladas las herramientas mencionadas, sigue estos pasos según tu sistema operativo:
+
+### Linux / WSL (Ubuntu/Debian)
+
+1.  **Actualizar lista de paquetes**
     ```bash
-    git clone <URL_DEL_REPOSITORIO>
-    cd fastapi-transaction
+    sudo apt update
     ```
-
-2.  **Crear y activar un entorno virtual**
+2.  **Instalar Git, Python y herramientas de entorno virtual**
+    Es crucial instalar `python3-venv` y `python3-pip` ya que a menudo no vienen preinstalados en algunas distribuciones.
     ```bash
-    python3 -m venv env
-    source env/bin/activate
+    sudo apt install git python3 python3-pip python3-venv -y
     ```
-
-3.  **Instalar dependencias**
+3.  **Instalar PostgreSQL**
     ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Configurar variables de entorno**
-    ```bash
-    cp .env.example .env
-    ```
-    Edita el archivo `.env` con tus credenciales de PostgreSQL.
-
-5.  **Ejecutar migraciones**
-    ```bash
-    alembic upgrade head
+    sudo apt install postgresql postgresql-contrib -y
     ```
 
 ### Windows
 
-1.  **Clonar el repositorio**
-    ```bash
-    git clone <URL_DEL_REPOSITORIO>
-    cd fastapi-transaction
-    ```
+1.  **Instalar Python**
+    *   Descarga el instalador desde [python.org](https://www.python.org/downloads/).
+    *   **IMPORTANTE**: Al iniciar el instalador, marca la casilla **"Add Python to PATH"** antes de dar clic en "Install Now".
+2.  **Instalar Git**
+    *   Descarga e instala Git desde [git-scm.com](https://git-scm.com/download/win).
+    *   Usa las opciones predeterminadas del instalador.
 
-2.  **Crear y activar un entorno virtual**
+---
+
+## Instalación del Proyecto
+
+Una vez preparadas las herramientas, sigue estos pasos para levantar el proyecto:
+
+### 1. Clonar el repositorio
+Descarga el código fuente a tu máquina.
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd fastapi-transaction
+```
+
+### 2. Crear un Entorno Virtual
+El entorno virtual aísla las librerías del proyecto para no afectar tu sistema global.
+
+*   **Linux / macOS**:
+    ```bash
+    python3 -m venv env
+    ```
+*   **Windows**:
     ```powershell
     python -m venv env
+    ```
+
+### 3. Activar el Entorno Virtual
+Debes activarlo cada vez que trabajes en el proyecto. Verás que tu terminal muestra `(env)` al inicio.
+
+*   **Linux / macOS**:
+    ```bash
+    source env/bin/activate
+    ```
+*   **Windows**:
+    ```powershell
     .\env\Scripts\activate
     ```
 
-3.  **Instalar dependencias**
-    ```powershell
-    pip install -r requirements.txt
-    ```
+### 4. Instalar Dependencias
+Instala todas las librerías necesarias listadas en `requirements.txt`.
 
-4.  **Configurar variables de entorno**
-    ```powershell
-    copy .env.example .env
-    ```
-    Edita el archivo `.env` con tus credenciales de PostgreSQL.
+> [!WARNING]
+> **Usuarios de Windows**: Antes de ejecutar el comando, debéis editar el archivo `requirements.txt` y **borrar la línea `uvloop==0.21.0`**.
+>
+> **¿Por qué?**: `uvloop` es un reemplazo de alto rendimiento para el bucle de eventos asyncio, pero está construido sobre `libuv` y diseñado específicamente para sistemas **Unix** (Linux y macOS). **No es compatible con Windows**, por lo que la instalación fallará si no se elimina.
 
-5.  **Ejecutar migraciones**
-    ```powershell
-    alembic upgrade head
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Configuración de Base de Datos y Variables
+1.  Copia el archivo de ejemplo:
+    *   **Linux/Mac**: `cp .env.example .env`
+    *   **Windows**: `copy .env.example .env`
+2.  Abre el archivo `.env` y configura tus credenciales de PostgreSQL (`DATABASE_URL`).
+3.  Crea la base de datos en PostgreSQL si aún no existe.
+
+### 6. Ejecutar Migraciones (Solo PostgreSQL)
+Crea las tablas en la base de datos usando Alembic.
+```bash
+alembic upgrade head
+```
+
+## Uso con SQLite (Opcional)
+
+Si prefieres usar **SQLite** para desarrollo local (sin instalar PostgreSQL), sigue estos pasos:
+
+1.  Abre el archivo `.env`.
+2.  Comenta la línea de `DATABASE_URL` de PostgreSQL y descomenta la de SQLite:
+    ```ini
+    # DATABASE_URL = "postgresql://..."
+    DATABASE_URL = "sqlite:///./database.db"
     ```
+3.  **No es necesario ejecutar migraciones**. La aplicación creará automáticamente el archivo `database.db` y las tablas al iniciarse (gracias a la función `lifespan` en `main.py`).
+
+> [!NOTE]
+> Si deseas usar **Alembic** con SQLite, necesitarás instalar el driver asíncrono `aiosqlite` (`pip install aiosqlite`) y cambiar la URL a `sqlite+aiosqlite:///./database.db`, ya que la configuración de migraciones actual espera un entorno asíncrono. Para uso básico, la configuración por defecto es suficiente.
 
 ---
 
