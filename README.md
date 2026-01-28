@@ -110,9 +110,7 @@ Debes activarlo cada vez que trabajes en el proyecto. Verás que tu terminal mue
 Instala todas las librerías necesarias listadas en `requirements.txt`.
 
 > [!WARNING]
-> **Usuarios de Windows**: Antes de ejecutar el comando, debéis editar el archivo `requirements.txt` y **borrar la línea `uvloop==0.21.0`**.
->
-> **¿Por qué?**: `uvloop` es un reemplazo de alto rendimiento para el bucle de eventos asyncio, pero está construido sobre `libuv` y diseñado específicamente para sistemas **Unix** (Linux y macOS). **No es compatible con Windows**, por lo que la instalación fallará si no se elimina.
+> **Usuarios de Windows**: En `requirements.txt` **borrar la línea `uvloop==0.21.0`**.
 
 ```bash
 pip install -r requirements.txt
@@ -142,11 +140,6 @@ Si prefieres usar **SQLite** para desarrollo local (sin instalar PostgreSQL), si
     DATABASE_URL = "sqlite:///./database.db"
     ```
 3.  **No es necesario ejecutar migraciones**. La aplicación creará automáticamente el archivo `database.db` y las tablas al iniciarse (gracias a la función `lifespan` en `main.py`).
-
-> [!NOTE]
-> Si deseas usar **Alembic** con SQLite, necesitarás instalar el driver asíncrono `aiosqlite` (`pip install aiosqlite`) y cambiar la URL a `sqlite+aiosqlite:///./database.db`, ya que la configuración de migraciones actual espera un entorno asíncrono. Para uso básico, la configuración por defecto es suficiente.
-
----
 
 **Nota sobre Base de Datos**: Asegúrate de crear la base de datos definida en tu `DATABASE_URL` (en el archivo `.env`) antes de ejecutar `alembic upgrade head`.
 
@@ -180,4 +173,3 @@ El servidor se iniciará generalmente en `http://127.0.0.1:8000`.
 FastAPI genera automáticamente documentación interactiva para la API. Una vez que el servidor esté en ejecución, puedes acceder a ella en:
 
 -   **Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) - Permite probar los endpoints directamente desde el navegador.
--   **ReDoc**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) - Documentación alternativa más limpia y estructurada.
