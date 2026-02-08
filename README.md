@@ -76,11 +76,29 @@ Si no tienes instaladas las herramientas mencionadas, sigue estos pasos según t
 Una vez preparadas las herramientas, sigue estos pasos para levantar el proyecto:
 
 ### 1. Clonar el repositorio
-Descarga el código fuente a tu máquina.
+Descarga el código fuente a tu máquina. **Se recomienda clonar solo la rama `release`**, que contiene la versión estable y actualizada del proyecto.
+
+```bash
+# Clonar solo la rama release (recomendado)
+git clone --branch release --single-branch <URL_DEL_REPOSITORIO>
+cd fastapi-transaction
+```
+
+> [!TIP]
+> El comando `--single-branch` descarga únicamente la rama `release`, haciendo la clonación más rápida y ligera.
+
+<details>
+<summary><b>Alternativa:</b> Clonar todas las ramas (para desarrolladores)</summary>
+
+Si necesitas trabajar con múltiples ramas o contribuir al proyecto:
+
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 cd fastapi-transaction
+git checkout release  # Cambiar a la rama release
 ```
+
+</details>
 
 ### 2. Crear un Entorno Virtual
 El entorno virtual aísla las librerías del proyecto para no afectar tu sistema global.
@@ -111,6 +129,10 @@ Instala todas las librerías necesarias listadas en `requirements.txt`.
 
 > [!WARNING]
 > **Usuarios de Windows**: En `requirements.txt` **borrar la línea `uvloop==0.21.0`**.
+> ```powershell
+> # Abrir el archivo con Notepad y eliminar la línea manualmente:
+> notepad requirements.txt
+> ```
 
 ```bash
 pip install -r requirements.txt
